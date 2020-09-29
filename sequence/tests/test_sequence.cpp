@@ -1,18 +1,18 @@
 #include <iostream>
 
-#include "../asserts.h"
+#include "../../asserts.h"
 
 using tests::assert_equal;
 
-//#include "../sequence/array_sequence.h"
-//#define TestSequence ArraySequence
 
+//#include "../sequence/array_sequence.h"
 #include "../linked_list_sequence.h"
 
-#define TestSequence LinkedListSequence
-
 using namespace std;
-using namespace art;
+using namespace sem2;
+
+//#define TestSequence ArraySequence
+#define TestSequence LinkedListSequence
 
 #include "../ui/simple_ui.h"
 

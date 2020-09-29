@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../asserts.h"
+#include "../../asserts.h"
 
 #include "../linked_list.h"
 

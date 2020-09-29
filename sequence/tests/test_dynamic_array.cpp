@@ -176,7 +176,7 @@ int main() {
     assert_equal(array3->get(3), 8);
     assert_equal(array3->get(4), 16);
 
-    auto *array4 = new TestDynamicArray(*array3);
+    auto *array4 = new TestDynamicArray<int>(*array3);
     assert_equal(array4->get(0), 1);
     assert_equal(array4->get(1), 2);
     assert_equal(array4->get(2), 4);
@@ -187,22 +187,6 @@ int main() {
     delete array2;
     delete array3;
     delete array4;
-
-    auto *array5 = new TestDynamicArray<int *>(3);
-    int x = 5;
-    int y = 7;
-    int z = 6;
-    int *p2 = new int();
-    int *p3 = new int(z);
-    array5->set(0, &x);
-    array5->set(1, p2);
-    array5->set(2, p3);
-
-    *(array5->get(1)) = y;
-
-    assert_equal(array5->get(0), &x);
-    assert_equal(*(array5->get(1)), y);
-    assert_equal(array5->get(2), p3);
 
     auto *array6 = new TestDynamicArray<unsigned *>();
     array6->resize(5);

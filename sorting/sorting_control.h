@@ -56,11 +56,6 @@ namespace sem3 {
                    const SortingControl::SortingElement &rhs);
 
     template <>
-    void std::swap<SortingControl::SortingElement>(SortingControl::SortingElement &lhs,
-                                                   SortingControl::SortingElement &rhs) noexcept(__and_<is_nothrow_move_constructible<SortingElement>, is_nothrow_move_assignable<SortingElement> >::value) {
-        if (lhs.parent == rhs.parent) {
-            lhs.parent->sendReport("swap", lhs.id, rhs.id);
-        }
-        std::swap(lhs.value, rhs.value);
-    }
+    void swap<SortingControl::SortingElement>(SortingControl::SortingElement &lhs,
+                                              SortingControl::SortingElement &rhs);
 }

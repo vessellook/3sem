@@ -8,9 +8,102 @@ namespace sem2 {
 
     template<class T>
     class ArraySequence : public ISequence<T> {
+    protected:
+        class Item;
+
     private:
         unsigned length = 0;
-        DynamicArray<T> array;
+        DynamicArray<Item> array;
+
+    protected:
+        class Item : public ISequence<T>::Item {
+            T item;
+            unsigned index;
+            ArraySequence *parent;
+
+        public:
+            static Item *convertArray(const T *array, unsigned count) {
+                auto *result = new Item[count];
+                for (unsigned i = 0; i < count; i++) {
+                    result[i] = array[i];
+                }
+                return result;
+            }
+
+        public:
+            // TODO: проверка на граничные значения
+            Item *getNext() override {
+                unsigned i = index + 1;
+                if (i < parent->array.getSize()) {
+                    return &(parent->array[i]);
+                } else {
+                    return nullptr;
+                }
+            }
+
+            // TODO: проверка на граничные значения
+            const Item *getNext() const override {
+                unsigned i = index + 1;
+                if (i < parent->array.getSize()) {
+                    return &(parent->array[i]);
+                } else {
+                    return nullptr;
+                }
+            }
+
+            // TODO: проверка на граничные значения
+            Item *getPrev() override {
+                unsigned i = index - 1;
+                if (i < parent->array.getSize()) {
+                    return &(parent->array[i]);
+                } else {
+                    return nullptr;
+                }
+            }
+
+            // TODO: проверка на граничные значения
+            const Item *getPrev() const override {
+                unsigned i = index - 1;
+                if (i < parent->array.getSize()) {
+                    return &(parent->array[i]);
+                } else {
+                    return nullptr;
+                }
+            }
+
+            operator T &() override {
+                return item;
+            }
+
+            operator const T &() const override {
+                return item;
+            }
+
+            Item operator=(const T &other) {
+                item = other;
+                return *this;
+            }
+        };
+
+        using iterator = typename ISequence<T>::iterator;
+        using const_iterator = typename ISequence<T>::const_iterator;
+
+        iterator begin() override {
+            return iterator(&*array.begin());
+        }
+
+        const_iterator begin() const override {
+            return const_iterator(&*array.begin());
+        }
+
+        iterator end() override {
+            return iterator(nullptr);
+        }
+
+        const_iterator end() const override {
+            return const_iterator(nullptr);
+        }
+
     private:
         void resize(unsigned new_size);
 
@@ -80,14 +173,13 @@ namespace sem2 {
 
     template<class T>
     ArraySequence<T>::ArraySequence(ArraySequence<T> &&other):
-            length(other.length), array(move(other.array)) {
+            length(other.length), array(std::move(other.array)) {
         other.length = 0;
-        other.array = nullptr;
     }
 
     template<class T>
     ArraySequence<T>::ArraySequence(const T *items, unsigned count):
-            length(count), array(items, count) {}
+            length(count), array(Item::convertArray(items, count), count) {}
 
     template<class T>
     ArraySequence<T>::ArraySequence(const ISequence<T> &other):

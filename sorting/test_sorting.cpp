@@ -5,6 +5,8 @@
 #include "quicksort.h"
 #include "heapsort.h"
 #include "../asserts.h"
+#include <chrono>
+#include <functional>
 #include "sorting_control.h"
 
 using sem3::QuickSort;
@@ -47,52 +49,39 @@ void test_correctness(const sem3::Sorting<int> &sorting) {
     assert_equal(seq->get(4), 16);
 }
 
-class Benchmark {
-public:
-    explicit Benchmark(std::string hint = std::string()) :
-            hint(move(hint)),
-            start([] {
-                time_t t;
-                time(&t);
-                return t;
-            }()) {}
-
-    ~Benchmark() {
-        time_t finish;
-        time(&finish);
-        std::cerr << "Benchmark: " << finish - start << " seconds";
-        if (!hint.empty()) {
-            std::cerr << ", hint: " << hint;
-        }
-        std::cerr << std::endl;
+void benchmark(const std::function<void(void)> &callback, const std::string &hint = std::string()) {
+    auto start = std::chrono::steady_clock::now();
+    callback();
+    auto finish = std::chrono::steady_clock::now();
+    std::cerr << "benchmark: " << std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count() << " milliseconds";
+    if (!hint.empty()) {
+        std::cerr << " (hint: " << hint << ")";
     }
-
-private:
-    const std::string hint;
-    const time_t start;
-};
+    std::cerr << std::endl;
+}
 
 template<typename T>
-void big_test(const sem3::Sorting<T> &sorting, std::string hint) {
-    unsigned COUNT = 10000;
+void big_test(const sem3::Sorting<T> &sorting, unsigned count = 1'000'000, std::string hint = std::string()) {
     unsigned MAX_VALUE = 1'000'000;
     std::random_device randD;
     std::mt19937 randMT(randD());
-    std::uniform_int_distribution <T> range(0, MAX_VALUE);
+    std::uniform_int_distribution<T> range(0, MAX_VALUE);
 
-    auto *array = new T[COUNT];
-    for (unsigned i = 0; i < COUNT; i++) {
+    auto *array = new T[count];
+    for (unsigned i = 0; i < count; i++) {
         array[i] = range(randMT);
     }
 
-    {
-        auto b = Benchmark(move(hint));
-        sorting.sort(array, COUNT);
-    }
+
+    benchmark(
+            [&sorting, &array, count] {
+                sorting.sort(array, count);
+            }, hint);
 }
 
 int main() {
     test_correctness(QuickSort<int>());
     test_correctness(HeapSort<int>());
-    big_test(QuickSort<int>(), "");
+    big_test(QuickSort<int>(), 1'000'000, "quicksort");
+    big_test(HeapSort<int>(), 1'000'000, "heapsort");
 }

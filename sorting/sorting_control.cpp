@@ -25,3 +25,4 @@ SortingControl::getElements(const int *array, unsigned count) {
 void SortingControl::sendReport(std::string type, unsigned id1, unsigned id2) {
     reports.push({move(type), id1, id2});
 }
+

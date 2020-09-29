@@ -4,6 +4,76 @@ namespace sem2 {
 
     template<class T>
     class ISequence {
+    protected:
+        class Item {
+        public:
+
+            virtual Item *getNext() = 0;
+
+            virtual const Item *getNext() const = 0;
+
+            virtual Item *getPrev() = 0;
+
+            virtual const Item *getPrev() const = 0;
+
+            virtual operator T &() = 0;
+
+            virtual operator const T &() const = 0;
+        };
+
+    public:
+        class iterator {
+            Item *item;
+        public:
+            iterator(Item *item) : item(item) {}
+
+            T &operator*() {
+                return item;
+            }
+
+            T &operator->() {
+                return item;
+            }
+
+            iterator &operator++() {
+                item = item->getNext();
+            }
+
+            iterator &operator--() {
+                item = item->getPrev();
+            }
+        };
+
+        class const_iterator {
+            const Item *item;
+        public:
+            const_iterator(const Item *item) : item(item) {}
+
+            const T &operator*() {
+                return item;
+            }
+
+            const T &operator->() {
+                return item;
+            }
+
+            const_iterator &operator++() {
+                item = item->getNext();
+            }
+
+            const_iterator &operator--() {
+                item = item->getPrev();
+            }
+        };
+
+        virtual iterator begin() = 0;
+
+        virtual const_iterator begin() const = 0;
+
+        virtual iterator end() = 0;
+
+        virtual const_iterator end() const = 0;
+
     public:
         virtual ~ISequence() = default;
 
@@ -40,9 +110,9 @@ namespace sem2 {
 
         virtual ISequence<T> &operator=(const ISequence<T> &other) = 0;
 
-        virtual T &operator[](unsigned index)  { return get(index); };
+        virtual T &operator[](unsigned index) { return get(index); };
 
-        virtual T operator[](unsigned index) const { return get(index);}
+        virtual T operator[](unsigned index) const { return get(index); }
     };
 
 // extra

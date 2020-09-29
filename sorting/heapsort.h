@@ -26,13 +26,13 @@ namespace sem3 {
                     if (items[index] >= items[index / 2]) {
                         break;
                     }
-                    Swap(items[index], items[index / 2]);
+                    swap(items[index], items[index / 2]);
                     index /= 2;
                 }
             }
 
             T extractMin() {
-                Swap(items[1], items[count]);
+                swap(items[1], items[count]);
                 unsigned index = 1;
                 unsigned left, right;
                 while (true) {
@@ -44,10 +44,10 @@ namespace sem3 {
                         break;
                     } else if (right >= count ||
                                items[left] <= items[right]) {
-                        std::swap(items[index], items[left]);
+                        swap(items[index], items[left]);
                         index = left;
                     } else {
-                        std::swap(items[index], items[right]);
+                        swap(items[index], items[right]);
                         index = right;
                     }
                 }
