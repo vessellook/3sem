@@ -6,8 +6,9 @@ namespace sem2 {
     template<typename T>
     class LinkedList {
 
-        template <typename K>
+        template<typename K>
         friend void reverse(LinkedList<K> &);
+
         struct Node {
             T data;
             Node *prev;
@@ -36,13 +37,18 @@ namespace sem2 {
             second->prev = first;
         }
 
+        void tie(Node *first, Node *second,Node *third) {
+            tie(first, second);
+            tie(second, third);
+        }
+
     public:
         class iterator {
             friend class LinkedList<T>;
 
             Node *node;
 
-            iterator(Node *node) : node(node) {}
+            explicit iterator(Node *node) : node(node) {}
 
         public:
 
@@ -232,23 +238,21 @@ namespace sem2 {
             return *this;
         }
 
-        LinkedList &append(T data) {
+        iterator &append(T data) {
             auto *newNode = new Node(std::move(data));
-            tie(newNode, before->next);
-            tie(before, newNode);
+            tie(before, newNode, before->next);
             length++;
             return *this;
         }
 
-        LinkedList &prepend(T data) {
+        iterator &prepend(T data) {
             auto *newNode = new Node(std::move(data));
-            tie(after->prev, newNode);
-            tie(newNode, after);
+            tie(after->prev, newNode, after);
             length++;
             return *this;
         }
 
-        LinkedList &insert(T data, unsigned index) {
+        iterator &insert(T data, unsigned index) {
             if (length < index) {
                 std::string message =
                         "length = " + std::to_string(length) + "; " +
@@ -257,10 +261,9 @@ namespace sem2 {
             }
             auto *newNode = new Node(std::move(data));
             auto *prevNode = moveForward(index, before);
-            tie(newNode, prevNode->next);
-            tie(prevNode, newNode);
+            tie(prevNode, newNode, prevNode->next);
             length++;
-            return *this;
+            return iterator(newNode);
         }
 
         void concat(const LinkedList &other) {

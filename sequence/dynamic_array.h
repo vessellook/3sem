@@ -15,7 +15,7 @@ namespace sem2 {
 
         DynamicArray(const T *items, unsigned count);
 
-        DynamicArray(unsigned size = 0);
+        explicit DynamicArray(unsigned size = 0);
 
         ~DynamicArray();
 

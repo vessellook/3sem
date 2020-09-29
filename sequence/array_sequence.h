@@ -17,70 +17,24 @@ namespace sem2 {
 
     protected:
         class Item : public ISequence<T>::Item {
-            T item;
             unsigned index;
             ArraySequence *parent;
 
         public:
-            static Item *convertArray(const T *array, unsigned count) {
-                auto *result = new Item[count];
-                for (unsigned i = 0; i < count; i++) {
-                    result[i] = array[i];
-                }
-                return result;
-            }
+            Item() = default;
 
-        public:
-            // TODO: проверка на граничные значения
-            Item *getNext() override {
-                unsigned i = index + 1;
-                if (i < parent->array.getSize()) {
-                    return &(parent->array[i]);
-                } else {
-                    return nullptr;
-                }
-            }
+            Item(T item, unsigned index, ArraySequence *parent) : ISequence<T>::Item(std::move(item)), index(index), parent(parent) {}
 
-            // TODO: проверка на граничные значения
             const Item *getNext() const override {
-                unsigned i = index + 1;
-                if (i < parent->array.getSize()) {
-                    return &(parent->array[i]);
-                } else {
-                    return nullptr;
-                }
+                return &*(parent->array.begin() + (index + 1));
             }
 
-            // TODO: проверка на граничные значения
-            Item *getPrev() override {
-                unsigned i = index - 1;
-                if (i < parent->array.getSize()) {
-                    return &(parent->array[i]);
-                } else {
-                    return nullptr;
-                }
-            }
-
-            // TODO: проверка на граничные значения
             const Item *getPrev() const override {
-                unsigned i = index - 1;
-                if (i < parent->array.getSize()) {
-                    return &(parent->array[i]);
-                } else {
-                    return nullptr;
-                }
+                return &*(parent->array.begin() + (index - 1));
             }
 
-            operator T &() override {
-                return item;
-            }
-
-            operator const T &() const override {
-                return item;
-            }
-
-            Item operator=(const T &other) {
-                item = other;
+            Item &operator=(const T &other) {
+                this->item = other;
                 return *this;
             }
         };
@@ -97,11 +51,11 @@ namespace sem2 {
         }
 
         iterator end() override {
-            return iterator(nullptr);
+            return iterator(&*array.begin() + (array.getSize() - 1));
         }
 
         const_iterator end() const override {
-            return const_iterator(nullptr);
+            return const_iterator(&*array.begin() + (array.getSize() - 1));
         }
 
     private:
@@ -165,7 +119,7 @@ namespace sem2 {
 
     template<class T>
     ArraySequence<T>::ArraySequence(unsigned count):
-            length(count), array(count) {}
+            length(count), array(count + 1) {}
 
     template<class T>
     ArraySequence<T>::ArraySequence(const ArraySequence<T> &other):
@@ -179,14 +133,18 @@ namespace sem2 {
 
     template<class T>
     ArraySequence<T>::ArraySequence(const T *items, unsigned count):
-            length(count), array(Item::convertArray(items, count), count) {}
+            length(count), array(count + 1) {
+        for (unsigned i = 0; i < count; i++) {
+            array[i] = Item(items[i], i, this);
+        }
+    }
 
     template<class T>
     ArraySequence<T>::ArraySequence(const ISequence<T> &other):
-            length(other.getLength()), array(length) {
-        auto *items = other.getItems();
-        for (unsigned i = 0; i < length; i++) {
-            array[i] = items[i];
+            length(other.getLength()), array(length + 1) {
+        auto it = other.begin();
+        for (unsigned i = 0; i < length; ++i, ++it) {
+            array[i] = Item(*it, i, this);
         }
     }
 
@@ -195,7 +153,7 @@ namespace sem2 {
         if (length == 0) {
             throw OutOfRangeError("length == 0", __FILE__, __func__, __LINE__);
         }
-        return array[0];
+        return array[0].getValue();
     }
 
     template<class T>
@@ -203,25 +161,23 @@ namespace sem2 {
         if (length == 0) {
             throw OutOfRangeError("length == 0", __FILE__, __func__, __LINE__);
         }
-        return array[0];
+        return array[0].getValue();
     }
 
     template<class T>
     const T &ArraySequence<T>::getLast() const {
         if (length == 0) {
-            throw OutOfRangeError("length = 0", __FILE__,
-                                  __func__, __LINE__);
+            throw OutOfRangeError("length = 0", __FILE__, __func__, __LINE__);
         }
-        return array[length - 1];
+        return array[length - 1].getValue();
     }
 
     template<class T>
     T &ArraySequence<T>::getLast() {
         if (length == 0) {
-            throw OutOfRangeError("length = 0", __FILE__,
-                                  __func__, __LINE__);
+            throw OutOfRangeError("length = 0", __FILE__, __func__, __LINE__);
         }
-        return array[length - 1];
+        return array[length - 1].getValue();
     }
 
     template<class T>
@@ -231,7 +187,7 @@ namespace sem2 {
                                   + "; index = " + std::to_string(index);
             throw OutOfRangeError(message, __FILE__, __func__, __LINE__);
         }
-        return array[index];
+        return array[index].getValue();
     }
 
     template<class T>
@@ -241,7 +197,7 @@ namespace sem2 {
                                   + "; index = " + std::to_string(index);
             throw OutOfRangeError(message, __FILE__, __func__, __LINE__);
         }
-        return array[index];
+        return array[index].getValue();
     }
 
     template<class T>
@@ -257,8 +213,8 @@ namespace sem2 {
 
     template<class T>
     void ArraySequence<T>::resize(unsigned new_size) {
-        if (new_size >= array.getSize()) {
-            array.resize(new_size * 2);
+        if (new_size + 1 >= array.getSize()) {
+            array.resize(new_size * 2 + 2);
         }
         length = new_size;
     }
@@ -267,15 +223,15 @@ namespace sem2 {
     T *ArraySequence<T>::getItems() const {
         auto *items = new T[length];
         for (unsigned i = 0; i < length; i++) {
-            items[i] = array[i];
+            items[i] = array[i].getValue();
         }
         return items;
     }
 
     template<class T>
     ArraySequence<T> &ArraySequence<T>::append(T item) {
-        if (length >= array.getSize()) {
-            array.resize(2 * length + 1);
+        if (length + 1 >= array.getSize()) {
+            array.resize(2 * length + 2);
         }
         auto i = array.begin() + length;
         auto j = i - 1;
@@ -283,16 +239,17 @@ namespace sem2 {
             *i-- = *j--;
         }
         length++;
-        array[0] = item;
+        array[0] = Item(item, 0, this);
         return *this;
     }
 
     template<class T>
     ArraySequence<T> &ArraySequence<T>::prepend(T item) {
-        if (length >= array.getSize()) {
-            array.resize(2 * length);
+        if (length + 1 >= array.getSize()) {
+            array.resize(2 * length + 2);
         }
-        array[length++] = item;
+        length++;
+        array[length] = Item(item, length, this);
         return *this;
     }
 
@@ -303,15 +260,18 @@ namespace sem2 {
                     "length = " + std::to_string(length) + "; index = " +
                     std::to_string(index), __FILE__, __func__, __LINE__);
         }
-        if (length >= array.getSize()) {
-            array.resize(2 * length);
+        if (length + 1 >= array.getSize()) {
+            array.resize(2 * length + 2);
         }
-        auto i = array.begin() + length, j = i - 1;
+        auto i = array.begin() + length;
+        auto j = i - 1;
         while (i != array.begin() + index) {
-            *i-- = *j--;
+            i->getValue() = j->getValue();
+            i--;
+            j--;
         }
         length++;
-        array[index] = item;
+        array[index] = Item(item, index, this);
         return *this;
     }
 
@@ -324,21 +284,21 @@ namespace sem2 {
                     std::to_string(beginIndex) + "; endIndex" +
                     std::to_string(endIndex), __FILE__, __func__, __LINE__);
         }
-        auto *items = new T[endIndex - beginIndex];
+        auto result = new ArraySequence<T>(endIndex - beginIndex);
         for (unsigned i = beginIndex, j = 0; i < endIndex; i++, j++) {
-            items[j] = array[i];
+            result->set(j, this->get(i));
         }
-        return new ArraySequence<T>(items, endIndex - beginIndex);
+        return result;
     }
 
     template<class T>
     void ArraySequence<T>::concat(const ISequence<T> &list) {
         auto old_length = length;
-        resize(length + list.getLength());
+        resize(length + list.getLength() + 1);
         auto new_length = length;
         auto *items = list.getItems();
         for (unsigned i = old_length, j = 0; i < new_length; i++, j++) {
-            array[i] = items[j];
+            array[i] = Item(items[j], i, this);
         }
     }
 }

@@ -1,22 +1,19 @@
 #include <iostream>
+#include <memory>
 
 #include "../../asserts.h"
 
 using tests::assert_equal;
 
 
-//#include "../sequence/array_sequence.h"
-#include "../linked_list_sequence.h"
+#include "../array_sequence.h"
+//#include "../linked_list_sequence.h"
 
 using namespace std;
 using namespace sem2;
 
-//#define TestSequence ArraySequence
-#define TestSequence LinkedListSequence
-
-#include "../ui/simple_ui.h"
-
-using simple_ui::show;
+#define TestSequence ArraySequence
+//#define TestSequence LinkedListSequence
 
 
 int main() {
@@ -47,7 +44,7 @@ int main() {
     assert_equal(sequence1->get(1), 2);
     assert_equal(sequence1->get(2), 3);
     assert_equal(sequence1->get(3), 4);
-    assert_equal(sequence1->get(4), 5);
+    assert_equal(sequence1->get(4), 5, __FILE__, __LINE__);
     assert_equal(sequence1->get(5), 6);
 
     int *items = new int[5];
@@ -59,7 +56,7 @@ int main() {
 
     ISequence<int> *sequence2 = new TestSequence<int>(items, 5);
 
-    assert_equal<unsigned>(sequence2->getLength(), 5);
+    assert_equal<unsigned>(sequence2->getLength(), 5, __FILE__, __LINE__);
 
     assert_equal(sequence2->get(0), 1);
     assert_equal(sequence2->get(1), 2);
@@ -70,7 +67,7 @@ int main() {
     ISequence<int> *sequence3 = new TestSequence<int>(*sequence2);
     delete sequence2;
 
-    assert_equal<unsigned>(sequence3->getLength(), 5);
+    assert_equal<unsigned>(sequence3->getLength(), 5, __FILE__, __LINE__);
 
     assert_equal(sequence3->get(0), 1, __FILE__, __LINE__);
     assert_equal(sequence3->get(1), 2);
@@ -85,7 +82,7 @@ int main() {
     (*sequence3)[3] = 10;
     (*sequence3)[4] = 11;
 
-    assert_equal<unsigned>(sequence3->getLength(), 5);
+    assert_equal<unsigned>(sequence3->getLength(), 5, __FILE__, __LINE__);
 
     assert_equal(sequence3->get(0), 7);
     assert_equal(sequence3->get(1), 8);
@@ -104,7 +101,7 @@ int main() {
     assert_equal(sequence4->get(1), 2);
     assert_equal(sequence4->get(2), 3);
     assert_equal(sequence4->get(3), 4);
-    assert_equal(sequence4->get(4), 5);
+    assert_equal(sequence4->get(4), 5, __FILE__, __LINE__);
     assert_equal(sequence4->get(5), 6);
     assert_equal(sequence4->get(6), 7);
     assert_equal(sequence4->get(7), 8);
@@ -119,7 +116,7 @@ int main() {
     ISequence<int> *sequence5 = new TestSequence<int>();
     sequence5->append(2);
 
-    TestSequence<shared_ptr<TestSequence<int>>> sequence7;
+    TestSequence<std::shared_ptr<TestSequence<int>>> sequence7;
     cout << "FINISH";
     return 0;
 }

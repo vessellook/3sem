@@ -4,21 +4,26 @@ namespace sem2 {
 
     template<class T>
     class ISequence {
+    public:
+        class iterator;
+        class const_iterator;
     protected:
         class Item {
+            friend class ISequence<T>::iterator;
+            friend class ISequence<T>::const_iterator;
+        protected:
+            T item;
         public:
+            Item() = default;
+            Item(T item): item(item) {}
 
-            virtual Item *getNext() = 0;
+            T &getValue() { return item; }
+
+            const T &getValue() const { return item; }
 
             virtual const Item *getNext() const = 0;
 
-            virtual Item *getPrev() = 0;
-
             virtual const Item *getPrev() const = 0;
-
-            virtual operator T &() = 0;
-
-            virtual operator const T &() const = 0;
         };
 
     public:
@@ -28,11 +33,11 @@ namespace sem2 {
             iterator(Item *item) : item(item) {}
 
             T &operator*() {
-                return item;
+                return item->item;
             }
 
             T &operator->() {
-                return item;
+                return item->item;
             }
 
             iterator &operator++() {
@@ -49,12 +54,12 @@ namespace sem2 {
         public:
             const_iterator(const Item *item) : item(item) {}
 
-            const T &operator*() {
-                return item;
+            const T &operator*() const {
+                return item->item;
             }
 
-            const T &operator->() {
-                return item;
+            const T &operator->() const {
+                return item->item;
             }
 
             const_iterator &operator++() {

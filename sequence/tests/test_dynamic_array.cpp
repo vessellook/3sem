@@ -4,47 +4,43 @@
 #include "../../asserts.h"
 
 #include "../dynamic_array.h"
-#define TestDynamicArray DynamicArray
-
-//#include "../dynamic_array/safe_dynamic_array.h"
-//#define TestDynamicArray SafeDynamicArray
 
 using namespace std;
 using namespace sem2;
 using tests::assert_equal;
 
 bool check_constructor_and_size() {
-    auto array1 = TestDynamicArray<int>();
+    auto array1 = DynamicArray<int>();
     assert_equal(array1.getSize(), (unsigned)0);
-    auto array2 = TestDynamicArray<double>();
+    auto array2 = DynamicArray<double>();
     assert_equal(array1.getSize(), (unsigned)0);
-    auto array3 = TestDynamicArray<shared_ptr<int>>();
+    auto array3 = DynamicArray<shared_ptr<int>>();
     assert_equal(array1.getSize(), (unsigned)0);
-    auto array4 = TestDynamicArray<shared_ptr<double>>();
+    auto array4 = DynamicArray<shared_ptr<double>>();
     assert_equal(array4.getSize(), (unsigned)0);
-    auto array5 = TestDynamicArray<shared_ptr<TestDynamicArray<int>>>();
+    auto array5 = DynamicArray<shared_ptr<DynamicArray<int>>>();
     assert_equal(array5.getSize(), (unsigned)0);
-    auto array6 = TestDynamicArray<shared_ptr<TestDynamicArray<shared_ptr<int>>>>();
+    auto array6 = DynamicArray<shared_ptr<DynamicArray<shared_ptr<int>>>>();
     assert_equal(array6.getSize(), (unsigned)0);
 
-    auto array11 = TestDynamicArray<int>(5);
+    auto array11 = DynamicArray<int>(5);
     assert_equal(array11.getSize(), (unsigned)5);
-    auto array12 = TestDynamicArray<double>(5);
+    auto array12 = DynamicArray<double>(5);
     assert_equal(array12.getSize(), (unsigned)5);
-    auto array13 = TestDynamicArray<shared_ptr<int>>(5);
+    auto array13 = DynamicArray<shared_ptr<int>>(5);
     assert_equal(array13.getSize(), (unsigned)5);
-    auto array14 = TestDynamicArray<shared_ptr<double>>(5);
+    auto array14 = DynamicArray<shared_ptr<double>>(5);
     assert_equal(array14.getSize(), (unsigned)5);
-    auto array15 = TestDynamicArray<shared_ptr<TestDynamicArray<int>>>(5);
+    auto array15 = DynamicArray<shared_ptr<DynamicArray<int>>>(5);
     assert_equal(array15.getSize(), (unsigned)5);
-    auto array16 = TestDynamicArray<shared_ptr<TestDynamicArray<shared_ptr<int>>>>(5);
+    auto array16 = DynamicArray<shared_ptr<DynamicArray<shared_ptr<int>>>>(5);
     assert_equal(array16.getSize(), (unsigned)5);
 
     int* int_array = new int[5];
-    auto array21 = TestDynamicArray<int>(int_array, 5);
+    auto array21 = DynamicArray<int>(int_array, 5);
     assert_equal(array21.getSize(), (unsigned)5);
     auto* double_array = new double[5];
-    auto array22 = TestDynamicArray<double>(double_array, 5);
+    auto array22 = DynamicArray<double>(double_array, 5);
     assert_equal(array22.getSize(), (unsigned)5);
     delete[] int_array;
     delete[] double_array;
@@ -52,7 +48,7 @@ bool check_constructor_and_size() {
 }
 
 bool check_set_and_get() {
-    auto array1 = TestDynamicArray<int>(10);
+    auto array1 = DynamicArray<int>(10);
     array1.set(0, 3);
     array1.set(1, 5);
     array1.set(2, 0);
@@ -65,11 +61,11 @@ bool check_set_and_get() {
     assert_equal(array1.get(0), 1, __FILE__, __LINE__);
     assert_equal(array1.get(1), 2, __FILE__, __LINE__);
     assert_equal(array1.get(2), 3, __FILE__, __LINE__);
-    auto array3 = make_shared<TestDynamicArray<int>>(5);
+    auto array3 = make_shared<DynamicArray<int>>(5);
     array3->set(0, 1);
     array3->set(1, 2);
     array3->set(2, 3);
-    auto array4 = TestDynamicArray<shared_ptr<TestDynamicArray<int>>>(10);
+    auto array4 = DynamicArray<shared_ptr<DynamicArray<int>>>(10);
     array4.set(5, array3);
     assert_equal(array4.get(5)->get(2), 3, __FILE__, __LINE__);
     array3->set(2, 4);
@@ -78,7 +74,7 @@ bool check_set_and_get() {
 }
 
 bool check_subscript_operator() {
-    auto array1 = TestDynamicArray<int>(10);
+    auto array1 = DynamicArray<int>(10);
     array1[0] = 3;
     array1[1] = 5;
     array1[2] = 0;
@@ -91,11 +87,11 @@ bool check_subscript_operator() {
     assert_equal(array1[0], 1, __FILE__, __LINE__);
     assert_equal(array1[1], 2, __FILE__, __LINE__);
     assert_equal(array1[2], 3, __FILE__, __LINE__);
-    auto array3 = make_shared<TestDynamicArray<int>>(5);
+    auto array3 = make_shared<DynamicArray<int>>(5);
     (*array3)[0] = 1;
     (*array3)[1] = 2;
     (*array3)[2] = 3;
-    auto array4 = TestDynamicArray<shared_ptr<TestDynamicArray<int>>>(10);
+    auto array4 = DynamicArray<shared_ptr<DynamicArray<int>>>(10);
     array4[5] = array3;
     assert_equal((*(array4[5]))[2], 3, __FILE__, __LINE__);
     (*array3)[2] = 4;
@@ -104,7 +100,7 @@ bool check_subscript_operator() {
 }
 
 bool check_resize() {
-    auto array1 = TestDynamicArray<int>();
+    auto array1 = DynamicArray<int>();
     array1.resize(3);
     assert_equal(array1.getSize(), (unsigned)3);
     array1.set(0, 1);
@@ -132,10 +128,10 @@ int main() {
     check_resize();
     cout << "resize TEST PASSED" << endl;
 
-    auto *array1 = new TestDynamicArray<int>();
+    auto *array1 = new DynamicArray<int>();
     assert_equal<unsigned>(array1->getSize(), 0);
 
-    auto *array2 = new TestDynamicArray<int>(5);
+    auto *array2 = new DynamicArray<int>(5);
     assert_equal<unsigned>(array2->getSize(), 5);
 
     array1->resize(10);
@@ -168,7 +164,7 @@ int main() {
     items[3] = 8;
     items[4] = 16;
 
-    auto *array3 = new TestDynamicArray<int>(items, 5);
+    auto *array3 = new DynamicArray<int>(items, 5);
 
     assert_equal(array3->get(0), 1);
     assert_equal(array3->get(1), 2);
@@ -176,7 +172,7 @@ int main() {
     assert_equal(array3->get(3), 8);
     assert_equal(array3->get(4), 16);
 
-    auto *array4 = new TestDynamicArray<int>(*array3);
+    auto *array4 = new DynamicArray<int>(*array3);
     assert_equal(array4->get(0), 1);
     assert_equal(array4->get(1), 2);
     assert_equal(array4->get(2), 4);
@@ -188,7 +184,7 @@ int main() {
     delete array3;
     delete array4;
 
-    auto *array6 = new TestDynamicArray<unsigned *>();
+    auto *array6 = new DynamicArray<unsigned *>();
     array6->resize(5);
     if (array6->getSize() < 5) {
         array6->resize(15);
