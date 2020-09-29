@@ -7,30 +7,7 @@
 
 using namespace sem3;
 
-void test_correctness(const sem3::Sorting<int> &sorting) {
-
-    items[0] = 16;
-    items[1] = 1;
-    items[2] = 4;
-    items[3] = 8;
-    items[4] = 2;
-
-    sem2::ISequence<int> *seq = new sem2::ArraySequence<int>(items, 5);
-    seq = sorting.sort(*seq);
-    assert_equal(seq->get(0), 1, __FILE__, __LINE__);
-    assert_equal(seq->get(1), 2, __FILE__, __LINE__);
-    assert_equal(seq->get(2), 4);
-    assert_equal(seq->get(3), 8);
-    assert_equal(seq->get(4), 16);
-}
-
-template<typename T>
-void big_test(const sem3::Sorting<T> &sorting, unsigned count = 1'000'000, std::string hint = std::string()) {
-
-
-}
-
-TEST_CASE() {
+TEST_CASE("test correctness") {
     int *items = new int[5];
     items[0] = 1;
     items[1] = 16;

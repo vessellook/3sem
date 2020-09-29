@@ -7,7 +7,7 @@ using tests::assert_equal;
 
 
 #include "../array_sequence.h"
-//#include "../linked_list_sequence.h"
+#include "../linked_list_sequence.h"
 
 using namespace std;
 using namespace sem2;

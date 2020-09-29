@@ -4,30 +4,20 @@
 
 using sem2::DynamicArray;
 
-TEST_CASE("check compatibility to different types and classes") {
-    SECTION("int") {
+TEMPLATE_TEST_CASE("check compatibility to different types and classes", "", int, double, std::shared_ptr<int>, std::shared_ptr<double>, DynamicArray<int>, DynamicArray<double>) {
+    SECTION("empty") {
         auto arr = DynamicArray<int>();
         REQUIRE(arr.getSize() == 0);
     }
-    SECTION("double") {
-        auto arr = DynamicArray<double>();
+
+    SECTION("with 0 items") {
+        auto arr = DynamicArray<int>(0);
         REQUIRE(arr.getSize() == 0);
     }
-    SECTION("std::shared_ptr<int>") {
-        auto arr = DynamicArray<std::shared_ptr<int>>();
-        REQUIRE(arr.getSize() == 0);
-    }
-    SECTION("std::shared_ptr<double>") {
-        auto arr = DynamicArray<std::shared_ptr<double>>();
-        REQUIRE(arr.getSize() == 0);
-    }
-    SECTION("DynamicArray<int>") {
-        auto arr = DynamicArray<DynamicArray<int>>();
-        REQUIRE(arr.getSize() == 0);
-    }
-    SECTION("DynamicArray<double>") {
-        auto arr = DynamicArray<DynamicArray<double>>();
-        REQUIRE(arr.getSize() == 0);
+
+    SECTION("with 5 items") {
+        auto arr = DynamicArray<int>(5);
+        REQUIRE(arr.getSize() == 5);
     }
 }
 

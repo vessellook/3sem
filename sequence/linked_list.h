@@ -142,15 +142,20 @@ namespace sem2 {
         }
 
         ~LinkedList() {
+            clear();
+            delete before;
+            delete after;
+        }
+
+        void clear() {
             auto *node = before;
-            auto *nextNode = before->next;
-            for (unsigned i = 0; i < length; i++) {
-                delete node;
+            auto *nextNode = node->next;
+            while(nextNode != after) {
                 node = nextNode;
                 nextNode = nextNode->next;
+                delete node;
             }
-            delete node;
-            delete nextNode;
+            tie(before, after);
         }
 
         bool empty() const { return length == 0; }
@@ -238,21 +243,21 @@ namespace sem2 {
             return *this;
         }
 
-        iterator &append(T data) {
+        LinkedList &append(T data) {
             auto *newNode = new Node(std::move(data));
             tie(before, newNode, before->next);
             length++;
             return *this;
         }
 
-        iterator &prepend(T data) {
+        LinkedList  &prepend(T data) {
             auto *newNode = new Node(std::move(data));
             tie(after->prev, newNode, after);
             length++;
             return *this;
         }
 
-        iterator &insert(T data, unsigned index) {
+        LinkedList &insert(T data, unsigned index) {
             if (length < index) {
                 std::string message =
                         "length = " + std::to_string(length) + "; " +
@@ -263,7 +268,7 @@ namespace sem2 {
             auto *prevNode = moveForward(index, before);
             tie(prevNode, newNode, prevNode->next);
             length++;
-            return iterator(newNode);
+            return *this;
         }
 
         void concat(const LinkedList &other) {
@@ -276,6 +281,22 @@ namespace sem2 {
                 node = node->next;
             }
             length += other.length;
+        }
+
+        LinkedList &operator=(const LinkedList &other) {
+            LinkedList temp(other);
+            tie(before, temp.before->next);
+            tie(temp.after->prev, after);
+            tie(temp.before, temp.after);
+            length = temp.length;
+        }
+
+        LinkedList &operator=(LinkedList &&other) {
+            LinkedList temp(other);
+            tie(before, temp.before->next);
+            tie(temp.after->prev, after);
+            tie(temp.before, temp.after);
+            length = temp.length;
         }
     };
 }
