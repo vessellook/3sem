@@ -283,7 +283,7 @@ namespace sem2 {
             length += other.length;
         }
 
-        LinkedList &operator=(const LinkedList &other) {
+        const LinkedList &operator=(const LinkedList &other) {
             LinkedList temp(other);
             tie(before, temp.before->next);
             tie(temp.after->prev, after);
@@ -291,12 +291,13 @@ namespace sem2 {
             length = temp.length;
         }
 
-        LinkedList &operator=(LinkedList &&other) {
+        const LinkedList &operator=(LinkedList &&other) {
             LinkedList temp(other);
             tie(before, temp.before->next);
             tie(temp.after->prev, after);
             tie(temp.before, temp.after);
             length = temp.length;
+            return *this;
         }
     };
 }

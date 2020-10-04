@@ -2,7 +2,6 @@
 
 #include "../sequence/array_sequence.h"
 #include "sorting.h"
-#include "utils.h"
 #include <algorithm>
 
 namespace sem3 {

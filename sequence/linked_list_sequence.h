@@ -79,9 +79,10 @@ namespace sem2 {
             }
         }
 
-        LinkedListSequence &operator=(const ISequence<T> &other) override {
+        const LinkedListSequence &operator=(const ISequence<T> &other) override {
             LinkedListSequence<T> temp(other.getItems(), other.getLength());
             list = std::move(temp.list);
+            return *this;
         }
     };
 

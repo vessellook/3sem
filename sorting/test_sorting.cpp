@@ -4,6 +4,7 @@
 #include <ctime>
 #include "quicksort.h"
 #include "heapsort.h"
+#include "mergesort.h"
 #include "../asserts.h"
 #include <chrono>
 #include <functional>
@@ -11,6 +12,7 @@
 
 using sem3::QuickSort;
 using sem3::HeapSort;
+using sem3::MergeSort;
 using tests::assert_equal;
 
 void test_correctness(const sem3::Sorting<int> &sorting) {
@@ -82,6 +84,8 @@ void big_test(const sem3::Sorting<T> &sorting, unsigned count = 1'000'000, std::
 int main() {
     test_correctness(QuickSort<int>());
     test_correctness(HeapSort<int>());
+    test_correctness(MergeSort<int>());
     big_test(QuickSort<int>(), 1'000'000, "quicksort");
     big_test(HeapSort<int>(), 1'000'000, "heapsort");
+    big_test(MergeSort<int>(), 1'000'000, "mergesort");
 }

@@ -3,6 +3,7 @@
 #include <queue>
 #include <utility>
 #include <string>
+#include <stdexcept>
 #include "utils.h"
 
 namespace sem3 {
@@ -26,6 +27,11 @@ namespace sem3 {
             operator int() { return value; }
 
             operator int() const { return value; }
+
+            friend void swap(SortingElement &lhs, SortingElement &rhs) {
+                if (lhs.parent != rhs.parent) throw std::runtime_error("Elements of different SortingControl objects");
+                lhs.parent->sendReport("swap", lhs.id, rhs.id);
+            }
         };
 
     public:
@@ -54,8 +60,4 @@ namespace sem3 {
 
     bool operator<(const SortingControl::SortingElement &lhs,
                    const SortingControl::SortingElement &rhs);
-
-    template <>
-    void swap<SortingControl::SortingElement>(SortingControl::SortingElement &lhs,
-                                              SortingControl::SortingElement &rhs);
 }

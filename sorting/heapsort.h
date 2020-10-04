@@ -2,9 +2,7 @@
 
 #include "../sequence/array_sequence.h"
 #include "sorting.h"
-#include "utils.h"
 #include <algorithm>
-
 
 namespace sem3 {
     template<typename T>
@@ -26,13 +24,13 @@ namespace sem3 {
                     if (items[index] >= items[index / 2]) {
                         break;
                     }
-                    swap(items[index], items[index / 2]);
+                    std::swap(items[index], items[index / 2]);
                     index /= 2;
                 }
             }
 
             T extractMin() {
-                swap(items[1], items[count]);
+                std::swap(items[1], items[count]);
                 unsigned index = 1;
                 unsigned left, right;
                 while (true) {
@@ -44,10 +42,10 @@ namespace sem3 {
                         break;
                     } else if (right >= count ||
                                items[left] <= items[right]) {
-                        swap(items[index], items[left]);
+                        std::swap(items[index], items[left]);
                         index = left;
                     } else {
-                        swap(items[index], items[right]);
+                        std::swap(items[index], items[right]);
                         index = right;
                     }
                 }

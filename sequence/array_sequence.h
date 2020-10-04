@@ -63,7 +63,7 @@ namespace sem2 {
 
         T operator[](unsigned index) const override { return get(index); }
 
-        ArraySequence<T> &operator=(const ISequence<T> &other) override {
+        const ArraySequence<T> &operator=(const ISequence<T> &other) override {
             auto seq = ArraySequence<T>(other);
             array = std::move(seq.array);
             length = array.getSize();

@@ -38,7 +38,7 @@ namespace sem2 {
 
         virtual ISequence<T> &insertAt(T item, unsigned index) = 0;
 
-        virtual ISequence<T> &operator=(const ISequence<T> &other) = 0;
+        virtual const ISequence<T> &operator=(const ISequence<T> &other) = 0;
 
         virtual T &operator[](unsigned index) { return get(index); };
 
