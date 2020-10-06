@@ -64,14 +64,14 @@ std::istream &operator>>(std::istream &is, Request &request) {
 
 std::ostream &operator<<(std::ostream &os, const Request &request) {
     for (unsigned i = 0; i < request.count; i++) {
-        os << request.array[i];
+        os << request.array[i] << " ";
     }
     return os;
 }
 
 int main() {
     while (true) {
-        std::cout << ">> ";
+        std::cout << "$ ";
         std::string input;
         getline(std::cin, input);
         if (input == "exit") break;
@@ -88,7 +88,7 @@ int main() {
                          "[sort type] [array values separated by space (' ')]\n"
                          "Example: quick 1 4 3 2\n\n"
                          "Sorting types:\n"
-                         "  quick\n    uses algorithm QuickSort, default value\n"
+                         "  quick\n    uses algorithm QuickSort\n"
                          "  heap\n    uses algorithm HeapSort\n"
                          "  merge\n    uses algorithm MergeSort" << std::endl;
 
