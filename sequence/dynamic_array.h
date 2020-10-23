@@ -11,7 +11,7 @@ namespace sem2 {
     public:
         DynamicArray(const DynamicArray &other);
 
-        DynamicArray(DynamicArray &&other);
+        DynamicArray(DynamicArray &&other) noexcept ;
 
         DynamicArray(const T *items, unsigned count);
 
@@ -23,7 +23,7 @@ namespace sem2 {
 
         T &get(unsigned index);
 
-        unsigned getSize() const { return size; };
+        [[nodiscard]] unsigned getSize() const { return size; };
 
         DynamicArray<T> &set(unsigned index, T value);
 
@@ -70,7 +70,7 @@ namespace sem2 {
     }
 
     template<class T>
-    DynamicArray<T>::DynamicArray(DynamicArray &&other):size(other.size),
+    DynamicArray<T>::DynamicArray(DynamicArray &&other) noexcept:size(other.size),
                                                         data(other.data) {}
 
     template<class T>

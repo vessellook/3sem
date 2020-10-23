@@ -6,28 +6,21 @@
 namespace sem2 {
 
     struct MyError : public std::exception {
-        std::string message_;
-        std::string file_;
-        std::string func_;
-        unsigned line_;
+        std::string message;
 
-        explicit MyError(const std::string &message) {
-            message_ = message;
+        [[maybe_unused]] explicit MyError(const std::string &message) {
+            this->message = message;
         }
 
         MyError(const std::string &message,
                 const std::string &file,
                 const std::string &func,
                 unsigned line) {
-            message_ = message;
-            file_ = file;
-            func_ = func;
-            line_ = line;
+            this->message = message + " [ERROR in " + file + " in " + func + ", line " + std::to_string(line) + "]";
         }
 
-        const char *what() const noexcept override {
-            return (message_ + " [ERROR in " + file_ + " in " + func_ + ", line " + std::to_string(line_) +
-                    "]").c_str();
+        [[nodiscard]] const char *what() const noexcept override {
+            return message.c_str();
         }
     };
 
@@ -38,8 +31,8 @@ namespace sem2 {
                         unsigned line) : MyError(message, file, func, line) {};
     };
 
-    struct MemoryAllocationError : public MyError {
-        MemoryAllocationError(const std::string &message,
+    struct [[maybe_unused]] MemoryAllocationError : public MyError {
+        [[maybe_unused]] MemoryAllocationError(const std::string &message,
                               const std::string &file,
                               const std::string &func,
                               unsigned line) : MyError(message, file, func, line) {};
@@ -50,13 +43,6 @@ namespace sem2 {
                                   const std::string &file,
                                   const std::string &func,
                                   unsigned line) : MyError(message, file, func, line) {};
-    };
-
-    struct ZeroSizeOfMatrixError : public MyError {
-        ZeroSizeOfMatrixError(const std::string &message,
-                              const std::string &file,
-                              const std::string &func,
-                              unsigned line) : MyError(message, file, func, line) {};
     };
 
     struct EmptyValueError : public MyError {

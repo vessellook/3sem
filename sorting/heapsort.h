@@ -5,8 +5,8 @@
 #include <algorithm>
 
 namespace sem3 {
-    template<typename T>
-    class HeapSort : public Sorting<T> {
+    template<typename T, typename Comparator = std::less<T>>
+    class HeapSort : public ISorting<T> {
         class Heap {
             unsigned size;
             T *items;
@@ -19,9 +19,9 @@ namespace sem3 {
                 count++;
                 unsigned index = count;
                 items[index] = data;
-
+                Comparator _less;
                 while (index != 1) {
-                    if (items[index] >= items[index / 2]) {
+                    if (!_less(items[index], items[index / 2])) {
                         break;
                     }
                     std::swap(items[index], items[index / 2]);
@@ -33,15 +33,16 @@ namespace sem3 {
                 std::swap(items[1], items[count]);
                 unsigned index = 1;
                 unsigned left, right;
+                Comparator _less;
                 while (true) {
                     left = index * 2;
                     right = index * 2 + 1;
-                    if (left >= count || (items[index] <= items[left] &&
-                                          (items[index] <= items[right] ||
+                    if (left >= count || (!_less(items[left], items[index]) &&
+                                          (!_less(items[right], items[index]) ||
                                            right >= count))) {
                         break;
                     } else if (right >= count ||
-                               items[left] <= items[right]) {
+                               !_less(items[right], items[left])) {
                         std::swap(items[index], items[left]);
                         index = left;
                     } else {
@@ -64,9 +65,9 @@ namespace sem3 {
             }
         }
 
-        sem2::ISequence<T> *sort(sem2::ISequence<T> &seq) const override {
-            T *items = seq.getItems();
-            unsigned len = seq.getLength();
+        sem2::ISequence<T> *sort(const sem2::ISequence<T> *seq) const override {
+            T *items = seq->getItems();
+            unsigned len = seq->getLength();
             sort(items, len);
             return new sem2::ArraySequence<T>(items, len);
         }

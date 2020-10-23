@@ -7,9 +7,9 @@ namespace sem2 {
     public:
         virtual ~ISequence() = default;
 
-        virtual bool empty() const = 0;
+        [[nodiscard]] virtual bool empty() const = 0;
 
-        virtual unsigned getLength() const = 0;
+        [[nodiscard]] virtual unsigned getLength() const = 0;
 
         virtual const T &getFirst() const = 0;
 
@@ -30,15 +30,15 @@ namespace sem2 {
         virtual ISequence<T>
         *getSubsequence(unsigned beginIndex, unsigned endIndex) const = 0;
 
-        virtual ISequence<T> &set(unsigned index, T value) = 0;
+        virtual ISequence<T> *set(unsigned index, T value) = 0;
 
-        virtual ISequence<T> &append(T item) = 0;
+        virtual ISequence<T> *append(T item) = 0;
 
-        virtual ISequence<T> &prepend(T item) = 0;
+        virtual ISequence<T> *prepend(T item) = 0;
 
-        virtual ISequence<T> &insertAt(T item, unsigned index) = 0;
+        virtual ISequence<T> *insertAt(T item, unsigned index) = 0;
 
-        virtual const ISequence<T> &operator=(const ISequence<T> &other) = 0;
+        virtual ISequence<T> &operator=(const ISequence<T> &other) = 0;
 
         virtual T &operator[](unsigned index) { return get(index); };
 

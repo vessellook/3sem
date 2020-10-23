@@ -37,22 +37,24 @@ TEST_CASE("test correctness") {
 }
 
 
-TEST_CASE("Big array") {
-    unsigned COUNT = 1'000'000;
-    unsigned MAX_VALUE = 1'000'000;
-    std::random_device randD;
-    std::mt19937 randMT(randD());
-    std::uniform_int_distribution<int> range(0, MAX_VALUE);
-    auto *array = new int[COUNT];
-    for (unsigned i = 0; i < COUNT; i++) {
-        array[i] = range(randMT);
-    }
-
-    BENCHMARK_ADVANCED("QuickSort")(const QuickSort<int> &sorting) {
-            sorting.sort(array, COUNT);
-        };
-
-    BENCHMARK_ADVANCED("HeapSort")(const HeapSort<int> &sorting) {
-            sorting.sort(array, COUNT);
-        };
-}
+//TEST_CASE("Big array") {
+//    unsigned COUNT = 1'000'000;
+//    unsigned MAX_VALUE = 1'000'000;
+//    std::random_device randD;
+//    std::mt19937 randMT(randD());
+//    std::uniform_int_distribution<int> range(0, MAX_VALUE);
+//    auto *array = new int[COUNT];
+//    for (unsigned i = 0; i < COUNT; i++) {
+//        array[i] = range(randMT);
+//    }
+//
+//    BENCHMARK("QuickSort") {
+//            const QuickSort<int> sorting;
+//            sorting.sort(array, COUNT);
+//        };
+//
+//    BENCHMARK("HeapSort") {
+//            const HeapSort<int> sorting;
+//            sorting.sort(array, COUNT);
+//        };
+//}

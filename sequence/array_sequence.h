@@ -22,17 +22,19 @@ namespace sem2 {
 
         ArraySequence(const ArraySequence<T> &other);
 
-        ArraySequence(ArraySequence<T> &&other);
+        ArraySequence(ArraySequence<T> &&other) noexcept ;
 
         ArraySequence(const T *items, unsigned count);
+
+        ArraySequence(std::initializer_list<T> list);
 
         explicit ArraySequence(const ISequence<T> &other);
 
         ~ArraySequence() override = default;
 
-        bool empty() const override { return length == 0; }
+        [[nodiscard]] bool empty() const override { return length == 0; }
 
-        unsigned getLength() const override { return length; }
+        [[nodiscard]] unsigned getLength() const override { return length; }
 
         const T &getFirst() const override;
 
@@ -46,13 +48,13 @@ namespace sem2 {
 
         T &get(unsigned index) override;
 
-        ArraySequence<T> &set(unsigned index, T value) override;
+        ArraySequence<T> *set(unsigned index, T value) override;
 
-        ArraySequence<T> &append(T item) override;
+        ArraySequence<T> *append(T item) override;
 
-        ArraySequence<T> &prepend(T item) override;
+        ArraySequence<T> *prepend(T item) override;
 
-        ArraySequence<T> &insertAt(T item, unsigned index) override;
+        ArraySequence<T> *insertAt(T item, unsigned index) override;
 
         ArraySequence<T>
         *getSubsequence(unsigned beginIndex, unsigned endIndex) const override;
@@ -63,7 +65,7 @@ namespace sem2 {
 
         T operator[](unsigned index) const override { return get(index); }
 
-        const ArraySequence<T> &operator=(const ISequence<T> &other) override {
+        ArraySequence<T> &operator=(const ISequence<T> &other) override {
             auto seq = ArraySequence<T>(other);
             array = std::move(seq.array);
             length = array.getSize();
@@ -80,7 +82,7 @@ namespace sem2 {
             length(other.length), array(other.array) {}
 
     template<class T>
-    ArraySequence<T>::ArraySequence(ArraySequence<T> &&other):
+    ArraySequence<T>::ArraySequence(ArraySequence<T> &&other) noexcept:
             length(other.length), array(std::move(other.array)) {
         other.length = 0;
     }
@@ -150,7 +152,7 @@ namespace sem2 {
     }
 
     template<class T>
-    ArraySequence<T> &ArraySequence<T>::set(unsigned index, T value) {
+    ArraySequence<T> *ArraySequence<T>::set(unsigned index, T value) {
         if (length <= index) {
             std::string message = "length = " + std::to_string(getLength())
                                   + "; index = " + std::to_string(index);
@@ -178,7 +180,7 @@ namespace sem2 {
     }
 
     template<class T>
-    ArraySequence<T> &ArraySequence<T>::append(T item) {
+    ArraySequence<T> *ArraySequence<T>::append(T item) {
         if (length >= array.getSize()) {
             array.resize(2 * length + 1);
         }
@@ -193,17 +195,17 @@ namespace sem2 {
     }
 
     template<class T>
-    ArraySequence<T> &ArraySequence<T>::prepend(T item) {
+    ArraySequence<T> *ArraySequence<T>::prepend(T item) {
         if (length >= array.getSize()) {
             array.resize(2 * length + 1);
         }
-        length++;
         array[length] = item;
+        length++;
         return *this;
     }
 
     template<class T>
-    ArraySequence<T> &ArraySequence<T>::insertAt(T item, unsigned index) {
+    ArraySequence<T> *ArraySequence<T>::insertAt(T item, unsigned index) {
         if (length < index) {
             throw OutOfRangeError(
                     "length = " + std::to_string(length) + "; index = " +
@@ -248,6 +250,16 @@ namespace sem2 {
         auto *items = list.getItems();
         for (unsigned i = old_length, j = 0; i < new_length; i++, j++) {
             array[i] = items[j];
+        }
+    }
+
+    template<class T>
+    ArraySequence<T>::ArraySequence(std::initializer_list<T> list): length(list.end() - list.begin()),
+                                                                    array(length) {
+        unsigned i = 0;
+        for (T item : list) {
+            array[i] = std::move(item);
+            i++;
         }
     }
 }

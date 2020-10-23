@@ -5,12 +5,13 @@
 #include <algorithm>
 
 namespace sem3 {
-    template<typename T>
-    class MergeSort : public Sorting<T> {
+    template<typename T, typename Comparator = std::less<T>>
+    class MergeSort : public ISorting<T> {
         void merge(T *input, unsigned begin, unsigned middle, unsigned end, T *output) const {
             unsigned outputIt = begin;
+            Comparator _less;
             for (unsigned left = begin, right = middle; left != middle || right != end;) {
-                if (right == end || left != middle && input[left] < input[right]) {
+                if (right == end || left != middle && _less(input[left], input[right])) {
                     output[outputIt] = input[left];
                     outputIt++;
                     left++;
@@ -22,9 +23,9 @@ namespace sem3 {
             }
         }
 
-        void copy(T *input, unsigned begin, unsigned end, T *output) const {
+        void copy(T *from, unsigned begin, unsigned end, T *to) const {
             for (auto i = begin; i < end; i++) {
-                output[i] = input[i];
+                to[i] = from[i];
             }
         }
 
@@ -43,10 +44,11 @@ namespace sem3 {
             sort(array, 0, count, helpArray);
         }
 
-        sem2::ISequence<T> *sort(sem2::ISequence<T> &sequence) const override {
-            T *items = sequence.getItems();
-            sort(items, sequence.getLength());
-            return new sem2::ArraySequence<T>(items, sequence.getLength());
+        sem2::ISequence<T> *sort(const sem2::ISequence<T> *seq) const override {
+            T *items = seq->getItems();
+            unsigned len = seq->getLength();
+            sort(items, len);
+            return new sem2::ArraySequence<T>(items, len);
         }
     };
 }

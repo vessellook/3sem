@@ -5,6 +5,8 @@
 #include "sorting/heapsort.h"
 #include "sorting/quicksort.h"
 #include "sorting/mergesort.h"
+#include "benchmark.h"
+#include "lab3_task/sparse_matrix.h"
 
 using sem2::LinkedList;
 using sem2::DynamicArray;
@@ -17,7 +19,7 @@ enum class SortingType {
 };
 
 template<typename T>
-sem3::Sorting<T> *getSorting(SortingType type) {
+sem3::ISorting<T> *getSorting(SortingType type) {
     switch (type) {
         case SortingType::QUICKSORT:
             return new sem3::QuickSort<T>();
@@ -64,7 +66,7 @@ std::istream &operator>>(std::istream &is, Request &request) {
 
 std::ostream &operator<<(std::ostream &os, const Request &request) {
     for (unsigned i = 0; i < request.count; i++) {
-        os << request.array[i];
+        os << request.array[i] << ' ';
     }
     return os;
 }
@@ -75,21 +77,25 @@ int main() {
         std::string input;
         getline(std::cin, input);
         if (input == "exit") break;
-        if(input.empty()) continue;
+        if (input.empty()) continue;
         try {
             std::istringstream is(input);
             Request request{};
             is >> request;
             std::cout << "your array: " << request << std::endl;
+
             getSorting<double>(request.type)->sort(request.array, request.count);
+//            std::cout << "sorting time: "<< benchmark([&request]() {
+//                getSorting<double>(request.type)->sort(request.array, request.count);
+//            }) << " ms\n";
             std::cout << "sorted array: " << request << std::endl;
         } catch (std::invalid_argument &unused) {
             std::cout << "program: invalid input. Use the following schema\n"
                          "[sort type] [array values separated by space (' ')]\n"
                          "Example: quick 1 4 3 2\n\n"
                          "Sorting types:\n"
-                         "  quick\n    uses algorithm QuickSort, default value\n"
-                         "  heap\n    uses algorithm HeapSort\n"
+                         "  quick\n    uses algorithm QuickSort\n"
+                         "  heap\n     uses algorithm HeapSort\n"
                          "  merge\n    uses algorithm MergeSort" << std::endl;
 
         }
