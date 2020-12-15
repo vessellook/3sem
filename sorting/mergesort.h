@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../sequence/array_sequence.h"
+#include "../structures/array_sequence.h"
 #include "sorting.h"
 #include <algorithm>
 

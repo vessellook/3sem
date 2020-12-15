@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 
-#include "../catch2.h"
+#include "../catch2/catch2.h"
 
 #include "quicksort.h"
 #include "heapsort.h"

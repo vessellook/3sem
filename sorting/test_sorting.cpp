@@ -2,8 +2,8 @@
 #include <random>
 #include <vector>
 #include <string>
-#include "../sequence/array_sequence.h"
-#include "../sequence/linked_list_sequence.h"
+#include "../structures/array_sequence.h"
+#include "../structures/linked_list_sequence.h"
 #include "quicksort.h"
 #include "heapsort.h"
 #include "mergesort.h"
