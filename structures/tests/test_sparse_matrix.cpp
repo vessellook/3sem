@@ -56,7 +56,7 @@ void sum_matrices() {
     std::mt19937 randMT(randD());
     std::uniform_int_distribution<unsigned> range(0, MAX_VALUE);
 
-    auto first = SparseMatrix<unsigned>(MAX_VALUE + 1, MAX_VALUE + 1);
+    auto first = SparseMatrix<unsigned>(UINT_MAX, UINT_MAX);
     for (auto i = 0; i < MAX_VALUE; i++) {
         auto col = range(randMT);
         auto row = range(randMT);
@@ -64,7 +64,7 @@ void sum_matrices() {
         first.set(col, row, value);
     }
 
-    auto second = SparseMatrix<unsigned>(MAX_VALUE + 1, MAX_VALUE + 1);
+    auto second = SparseMatrix<unsigned>(UINT_MAX, UINT_MAX);
     for (auto i = 0; i < MAX_VALUE; i++) {
         auto col = range(randMT);
         auto row = range(randMT);
@@ -78,12 +78,12 @@ void sum_matrices() {
 }
 
 void product_matrices() {
-    unsigned MAX_VALUE = 10'000;
+    unsigned MAX_VALUE = 1'000;
     std::random_device randD;
     std::mt19937 randMT(randD());
     std::uniform_int_distribution<unsigned> range(0, MAX_VALUE);
 
-    auto first = SparseMatrix<unsigned>(MAX_VALUE + 1, MAX_VALUE + 1);
+    auto first = SparseMatrix<unsigned>(UINT_MAX, UINT_MAX);
     for (auto i = 0; i < MAX_VALUE; i++) {
         auto col = range(randMT);
         auto row = range(randMT);
@@ -91,7 +91,7 @@ void product_matrices() {
         first.set(col, row, value);
     }
 
-    auto second = SparseMatrix<unsigned>(MAX_VALUE + 1, MAX_VALUE + 1);
+    auto second = SparseMatrix<unsigned>(UINT_MAX, UINT_MAX);
     for (auto i = 0; i < MAX_VALUE; i++) {
         auto col = range(randMT);
         auto row = range(randMT);
@@ -107,7 +107,7 @@ void product_matrices() {
 int main() {
     test_correctness();
 //    sum_matrices();
-//    product_matrices();
+    product_matrices();
     std::cout << "FINISH";
 
 }

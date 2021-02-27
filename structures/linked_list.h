@@ -322,7 +322,7 @@ namespace sem2 {
     }
 
     template<typename T>
-    LinkedList<T> &LinkedList<T>::append(T data) {
+    LinkedList<T> &LinkedList<T>::prepend(T data) {
         auto *newNode = new Node(std::move(data));
         tie(before, newNode, before->next);
         length++;
@@ -330,7 +330,7 @@ namespace sem2 {
     }
 
     template<typename T>
-    LinkedList<T> &LinkedList<T>::prepend(T data) {
+    LinkedList<T> &LinkedList<T>::append(T data) {
         auto *newNode = new Node(std::move(data));
         tie(after->prev, newNode, after);
         length++;

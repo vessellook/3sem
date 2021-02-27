@@ -6,6 +6,7 @@ namespace sem3 {
     template<typename First, typename Second>
     class Pair {
     public:
+
         First first;
         Second second;
 
@@ -21,7 +22,7 @@ namespace sem3 {
 
         Pair(First first, Second second) : first(std::move(first)), second(std::move(second)) {}
 
-        bool operator==(const Pair &other) {
+        bool operator==(const Pair &other) const {
             return first == other.first && second == other.second;
         }
     };

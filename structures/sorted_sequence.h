@@ -9,9 +9,12 @@ namespace sem3 {
     class SortedSequence {
         sem2::ArraySequence<TElement> sequence;
         std::function<bool(TElement, TElement)> less;
+        std::function<bool(TElement, TElement)> equal;
 
     public:
-        explicit SortedSequence(std::function<bool(TElement, TElement)> less = std::less<TElement>()) : less(less) {}
+        explicit SortedSequence(std::function<bool(TElement, TElement)> less = std::less<TElement>(),
+                                std::function<bool(TElement, TElement)> equal = std::equal_to<TElement>()) : less(less),
+                                                                                                             equal(equal) {}
 
         using Iterator = typename sem2::ArraySequence<TElement>::Iterator;
 
@@ -60,7 +63,7 @@ namespace sem3 {
             }
             unsigned index = lowerOrEqualIndex(element);
             unsigned len = sequence.getLength();
-            while (index < len && element <= sequence[index]) {
+            while (index < len && (less(element, sequence[index]) || equal(element, sequence[index]))) {
                 index++;
             }
             if (index == len) {
@@ -72,8 +75,10 @@ namespace sem3 {
             return index;
         }
 
-        void remove(unsigned index) {
+        TElement remove(unsigned index) {
+            auto element = std::move(sequence.get(index));
             sequence.remove(index);
+            return std::move(element);
         }
 
         const TElement &get(unsigned index) const {

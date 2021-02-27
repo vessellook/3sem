@@ -20,9 +20,9 @@ namespace sem3 {
         using Iterator = typename HashTable<TElement>::Iterator;
 
         std::unique_ptr<IIterator<TElement>>
-        GetIterator() const { return table.getIterator(); }
+        getIterator() const { return table.getIterator(); }
 
-        void Remove(const TElement &element) {
+        void remove(const TElement &element) {
             if (!table.remove(element)) {
                 throw std::runtime_error("no such key in HashSet");
             }
@@ -31,23 +31,23 @@ namespace sem3 {
             }
         }
 
-        void Add(TElement element) {
+        void add(TElement element) {
             table.add(element);
             if (table.getCapacity() < table.getCount()) {
                 table.resizeMore();
             }
         }
 
-        bool Has(const TElement &element) const {
+        bool has(const TElement &element) const {
             return table.contains(element);
         }
 
-        [[nodiscard]] unsigned GetCount() const {
+        [[nodiscard]] unsigned getCount() const {
             return table.getCount();
         }
 
 
-        [[nodiscard]] unsigned GetCapacity() const {
+        [[nodiscard]] unsigned getCapacity() const {
             return table.getCapacity();
         }
     };

@@ -300,7 +300,7 @@ namespace sem2 {
     ArraySequence<T>::ArraySequence(std::initializer_list<T> list): length(list.end() - list.begin()),
                                                                     array(length) {
         unsigned i = 0;
-        for (T item : list) {
+        for (T & item : list) {
             array[i] = std::move(item);
             i++;
         }
@@ -337,7 +337,7 @@ namespace sem2 {
                                   std::to_string(index), __FILE__, __func__, __LINE__);
         }
         for (unsigned i = index, j = index + 1; j < length; i++, j++) {
-            set(i, get(j));
+            set(i, std::move(get(j)));
         }
         length--;
     }

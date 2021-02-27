@@ -22,14 +22,6 @@ std::string_view getFirstWord(std::string_view view) {
 
 using Row = sem2::ArraySequence<std::string>;
 
-/*
-create first 5 5
->> set 2 2 3
->> set 1 1 7
->> set 4 4 12
->> set 4 2 1
-*/
-
 class Manager {
     HashMap<std::string, SparseMatrix<int>> matrices = HashMap<std::string, SparseMatrix<int>>();
     std::string current;
@@ -111,11 +103,10 @@ public:
 
     bool show(const std::string &line) {
         if (current.empty()) return false;
-        RegEx regex("^ *show +([^ ]+) *$");
+        RegEx regex("^ *show *$");
         if (regex.check(line)) {
-            auto name = std::string(regex.split(line)[1]);
-            if (matrices.containsKey(name)) {
-                const SparseMatrix<int> &matrix = matrices.get(std::string(name));
+            if (matrices.containsKey(current)) {
+                const SparseMatrix<int> &matrix = matrices.get(current);
                 output(std::cout, matrix);
                 return true;
             }
@@ -137,7 +128,7 @@ public:
 
     bool set(const std::string &line) {
         if (current.empty()) return false;
-        RegEx regex("^ *set +([0-9]+) +([0-9]+) +([0-9]+) *$");
+        RegEx regex("^ *set +([0-9]+) +([0-9]+) +(-?[0-9]+) *$");
         if (regex.check(line)) {
             auto groups = regex.split(line);
             unsigned long row, col;

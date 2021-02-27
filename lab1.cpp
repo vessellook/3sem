@@ -1,12 +1,13 @@
 #include <iostream>
 #include <sstream>
-#include "sequence/linked_list_sequence.h"
-#include "sequence/array_sequence.h"
+#include <memory>
+#include "structures/linked_list_sequence.h"
+#include "structures/array_sequence.h"
 #include "sorting/heapsort.h"
 #include "sorting/quicksort.h"
 #include "sorting/mergesort.h"
 #include "benchmark.h"
-#include "lab3_task/sparse_matrix.h"
+#include "structures/sparse_matrix.h"
 
 using sem2::LinkedList;
 using sem2::DynamicArray;
@@ -72,6 +73,8 @@ std::ostream &operator<<(std::ostream &os, const Request &request) {
 }
 
 int main() {
+    sem2::ArraySequence<std::unique_ptr<int>> a;
+
     while (true) {
         std::cout << ">> ";
         std::string input;

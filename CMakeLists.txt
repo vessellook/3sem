@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.15)
 project(3sem)
 
 #add_compile_options(-static-libgcc -static-libstdc++)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
-add_executable(lab3 lab3_task/lab3.cpp)
+add_executable(test_adjacency_matrix_graph graph/tests/test_adjacency_matrix_graph.cpp)
 
 add_executable(weak_grep regex/weak_grep.cpp regex/regex.cpp regex/tokens/anything.cpp regex/tokens/group.cpp regex/tokens/char.cpp regex/tokens/set.cpp regex/tokens/root.cpp)
 

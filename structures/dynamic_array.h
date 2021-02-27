@@ -47,7 +47,7 @@ namespace sem2 {
 
         const T &operator[](unsigned index) const { return get(index); };
 
-        DynamicArray<T> &operator=(DynamicArray<T> &&other) {
+        DynamicArray<T> &operator=(DynamicArray<T> &&other)  noexcept {
             if (data != nullptr) { delete[] data; }
             size = other.size;
             data = other.data;

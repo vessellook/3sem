@@ -25,6 +25,6 @@ namespace tests {
                           + " [" + file + ", line " + std::to_string(line) + ']');
     }
 
-#define ASSERT_EQUAL(a, b) assert_equal(a, b, __FILE__, __LINE__)
+#define ASSERT_EQUAL(a, b) tests::assert_equal(a, b, __FILE__, __LINE__)
 }
 
